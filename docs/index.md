@@ -3,12 +3,12 @@
 page_title: "statuspal-next Provider"
 subcategory: ""
 description: |-
-  Manage StatusPal Next https://www.statuspal.io status pages, services, containers (regions), and outgoing webhooks as code via the Management API.
+  Manage StatusPal Next https://www.statuspal.io status pages, services, containers (regions), outgoing webhooks, monitoring checks, and incident automations as code via the Management API.
 ---
 
 # statuspal-next Provider
 
-Manage [StatusPal Next](https://www.statuspal.io) status pages, services, containers (regions), and outgoing webhooks as code via the Management API.
+Manage [StatusPal Next](https://www.statuspal.io) status pages, services, containers (regions), outgoing webhooks, monitoring checks, and incident automations as code via the Management API.
 
 ## Example Usage
 

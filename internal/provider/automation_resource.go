@@ -213,13 +213,18 @@ func (r *automationResource) ImportState(ctx context.Context, req resource.Impor
 
 func automationRequestBody(plan *automationResourceModel) *statuspalnext.Automation {
 	a := &statuspalnext.Automation{
-		ServiceSlug:     plan.ServiceSlug.ValueString(),
-		ContainerSlug:   plan.ContainerSlug.ValueString(),
-		ManageIncidents: statuspalnext.BoolPtr(plan.ManageIncidents.ValueBool()),
+		ServiceSlug:   plan.ServiceSlug.ValueString(),
+		ContainerSlug: plan.ContainerSlug.ValueString(),
 		AutomationFormat: &statuspalnext.AutomationFormat{
 			ExpectedResultPath: plan.AutomationFormat.ExpectedResultPath.ValueString(),
 			ExpectedResult:     plan.AutomationFormat.ExpectedResult.ValueString(),
 		},
+	}
+	// manage_incidents is Optional+Computed with no default, so an omitted value is
+	// unknown on create/update. Only send it when the user actually set it, otherwise
+	// we'd serialize false and clobber the server-side default.
+	if !plan.ManageIncidents.IsNull() && !plan.ManageIncidents.IsUnknown() {
+		a.ManageIncidents = statuspalnext.BoolPtr(plan.ManageIncidents.ValueBool())
 	}
 	if !plan.AutomationFormat.SecretPath.IsNull() && !plan.AutomationFormat.SecretPath.IsUnknown() {
 		a.AutomationFormat.SecretPath = statuspalnext.StringPtr(plan.AutomationFormat.SecretPath.ValueString())

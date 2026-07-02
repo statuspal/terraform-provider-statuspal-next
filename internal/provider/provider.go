@@ -57,7 +57,8 @@ func (p *statuspalNextProvider) Metadata(_ context.Context, _ provider.MetadataR
 func (p *statuspalNextProvider) Schema(_ context.Context, _ provider.SchemaRequest, resp *provider.SchemaResponse) {
 	resp.Schema = schema.Schema{
 		MarkdownDescription: "Manage [StatusPal Next](https://www.statuspal.io) status pages, services, " +
-			"containers (regions), and outgoing webhooks as code via the Management API.",
+			"containers (regions), outgoing webhooks, monitoring checks, and incident automations as code " +
+			"via the Management API.",
 		Attributes: map[string]schema.Attribute{
 			"api_key": schema.StringAttribute{
 				MarkdownDescription: "Organization API key (a `sk_…` token sent as a Bearer credential). " +
