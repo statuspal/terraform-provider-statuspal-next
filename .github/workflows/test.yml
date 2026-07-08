@@ -52,6 +52,18 @@ jobs:
           git diff --compact-summary --exit-code || \
             (echo; echo "Unexpected difference in directories after code generation. Run 'go generate ./...' command and commit."; exit 1)
 
+  # Ensure the example .tf files stay canonically formatted.
+  terraform-fmt:
+    name: Terraform Format Check
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@0ad4b8fadaa221de15dcec353f45205ec38ea70b # v4.1.4
+      - uses: hashicorp/setup-terraform@b9cd54a3c349d3f38e8881555d616ced269862dd # v3.1.2
+        with:
+          terraform_wrapper: false
+      - run: terraform fmt -check -recursive -diff examples/
+
   # Scan Go dependencies (and the standard library) for known vulnerabilities.
   vulncheck:
     name: Vulnerability Scan

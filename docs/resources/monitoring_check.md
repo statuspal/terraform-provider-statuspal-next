@@ -15,12 +15,12 @@ Manages an uptime monitoring check (HTTP or TCP). Optionally drives status-page 
 ```terraform
 # A simple HTTP uptime check.
 resource "statuspal-next_monitoring_check" "api" {
-  name             = "API Gateway health"
-  url              = "https://api.acme.com/health"
-  http_method      = "get"
+  name              = "API Gateway health"
+  url               = "https://api.acme.com/health"
+  http_method       = "get"
   recv_timeout_secs = 5
-  geo_areas        = ["US", "EU"]
-  recipient_emails = ["ops@acme.com"]
+  geo_areas         = ["US", "EU"]
+  recipient_emails  = ["ops@acme.com"]
 }
 
 # A TCP check that also drives status-page incident automation: when it goes
