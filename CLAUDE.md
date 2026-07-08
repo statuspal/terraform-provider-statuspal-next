@@ -23,9 +23,10 @@ make testacc                         # acceptance tests (sets TF_ACC=1, mock-dri
 go test -run TestAccService ./internal/provider/   # single acceptance test (needs TF_ACC=1)
 make docs                            # regenerate docs/ via tfplugindocs (go generate ./...)
 golangci-lint run                    # lint (config in .golangci.yml)
+govulncheck ./...                    # scan deps + stdlib for known vulnerabilities (CI gate)
 ```
 
-Toolchain pins: Go 1.22.9, Terraform 1.9.8 (`.tool-versions`). CI also matrix-tests Terraform 1.11.
+Toolchain pins: Go 1.25.12, Terraform 1.9.8 (`.tool-versions`). CI also matrix-tests Terraform 1.11.
 
 CI (`.github/workflows/test.yml`) runs: build + golangci-lint → `go generate` diff check (docs
 must be committed) → client unit tests → acceptance tests across Terraform versions.
