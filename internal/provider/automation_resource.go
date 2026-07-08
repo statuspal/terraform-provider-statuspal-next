@@ -45,6 +45,7 @@ type automationResourceModel struct {
 	ContainerSlug       types.String           `tfsdk:"container_slug"`
 	ManageIncidents     types.Bool             `tfsdk:"manage_incidents"`
 	Secret              types.String           `tfsdk:"secret"`
+	HasSecret           types.Bool             `tfsdk:"has_secret"`
 	AutomationFormat    *automationFormatModel `tfsdk:"automation_format"`
 	TriggerURL          types.String           `tfsdk:"trigger_url"`
 	CreatedAt           types.String           `tfsdk:"created_at"`
@@ -86,10 +87,16 @@ func (r *automationResource) Schema(_ context.Context, _ resource.SchemaRequest,
 			},
 			"secret": schema.StringAttribute{
 				MarkdownDescription: "Optional secret used to validate incoming trigger requests (matched against " +
-					"`automation_format.secret_path`). Write-only — never returned by the API; kept in state.",
+					"`automation_format.secret_path`). Write-only — never returned by the API; kept in state. " +
+					"Removing it from configuration clears the secret on the server.",
 				Optional:      true,
 				Sensitive:     true,
 				PlanModifiers: []planmodifier.String{stringplanmodifier.UseStateForUnknown()},
+			},
+			"has_secret": schema.BoolAttribute{
+				MarkdownDescription: "Whether a request-validation secret is currently configured on the server. " +
+					"Use it to detect a secret set out-of-band (the write-only `secret` value itself is never returned).",
+				Computed: true,
 			},
 			"automation_format": schema.SingleNestedAttribute{
 				MarkdownDescription: "Custom JSONPath rule used to interpret trigger payloads.",
@@ -177,7 +184,14 @@ func (r *automationResource) Update(ctx context.Context, req resource.UpdateRequ
 		return
 	}
 
-	updated, err := r.client.UpdateAutomation(ctx, state.StatusPageSubdomain.ValueString(), state.ID.ValueString(), automationRequestBody(&plan))
+	body := automationRequestBody(&plan)
+	// Removing secret from config omits it from the body, which the API reads as
+	// "leave unchanged". Send an empty string instead so the server clears it.
+	if plan.Secret.IsNull() && !state.Secret.IsNull() && state.Secret.ValueString() != "" {
+		body.Secret = statuspalnext.StringPtr("")
+	}
+
+	updated, err := r.client.UpdateAutomation(ctx, state.StatusPageSubdomain.ValueString(), state.ID.ValueString(), body)
 	if err != nil {
 		resp.Diagnostics.AddError("Error updating automation", err.Error())
 		return
@@ -247,6 +261,7 @@ func automationToModel(a *statuspalnext.Automation, prior *automationResourceMod
 		ContainerSlug:       types.StringValue(a.ContainerSlug),
 		ManageIncidents:     types.BoolValue(boolValue(a.ManageIncidents, false)),
 		Secret:              prior.Secret,
+		HasSecret:           types.BoolValue(a.HasSecret),
 		TriggerURL:          types.StringValue(a.TriggerURL),
 		CreatedAt:           types.StringValue(a.CreatedAt),
 		UpdatedAt:           types.StringValue(a.UpdatedAt),

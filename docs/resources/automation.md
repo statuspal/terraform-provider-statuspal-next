@@ -52,11 +52,12 @@ output "api_automation_trigger_url" {
 ### Optional
 
 - `manage_incidents` (Boolean) When true, triggers open/close incidents; when false, they only flip the service status.
-- `secret` (String, Sensitive) Optional secret used to validate incoming trigger requests (matched against `automation_format.secret_path`). Write-only — never returned by the API; kept in state.
+- `secret` (String, Sensitive) Optional secret used to validate incoming trigger requests (matched against `automation_format.secret_path`). Write-only — never returned by the API; kept in state. Removing it from configuration clears the secret on the server.
 
 ### Read-Only
 
 - `created_at` (String) Timestamp at which the automation was created.
+- `has_secret` (Boolean) Whether a request-validation secret is currently configured on the server. Use it to detect a secret set out-of-band (the write-only `secret` value itself is never returned).
 - `id` (String) TypeID-prefixed identifier (e.g. `auto_…`).
 - `trigger_url` (String, Sensitive) URL external monitors POST trigger payloads to. Treated as a capability URL (it embeds a token that can drive incident/service state), so it is marked sensitive.
 - `updated_at` (String) Timestamp at which the automation was last updated.
