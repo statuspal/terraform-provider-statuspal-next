@@ -4,5 +4,6 @@ data "statuspal-next_automations" "acme" {
 }
 
 output "automation_trigger_urls" {
-  value = [for a in data.statuspal-next_automations.acme.automations : a.trigger_url]
+  value     = [for a in data.statuspal-next_automations.acme.automations : a.trigger_url]
+  sensitive = true
 }

@@ -19,5 +19,6 @@ resource "statuspal-next_automation" "api" {
 
 # Point your external monitor at this URL.
 output "api_automation_trigger_url" {
-  value = statuspal-next_automation.api.trigger_url
+  value     = statuspal-next_automation.api.trigger_url
+  sensitive = true
 }

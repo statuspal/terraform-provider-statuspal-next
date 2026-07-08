@@ -19,7 +19,8 @@ data "statuspal-next_automations" "acme" {
 }
 
 output "automation_trigger_urls" {
-  value = [for a in data.statuspal-next_automations.acme.automations : a.trigger_url]
+  value     = [for a in data.statuspal-next_automations.acme.automations : a.trigger_url]
+  sensitive = true
 }
 ```
 
@@ -48,5 +49,5 @@ Read-Only:
 - `manage_incidents` (Boolean)
 - `secret_path` (String)
 - `service_slug` (String)
-- `trigger_url` (String)
+- `trigger_url` (String, Sensitive)
 - `updated_at` (String)

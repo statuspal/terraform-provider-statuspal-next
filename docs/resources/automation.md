@@ -34,7 +34,8 @@ resource "statuspal-next_automation" "api" {
 
 # Point your external monitor at this URL.
 output "api_automation_trigger_url" {
-  value = statuspal-next_automation.api.trigger_url
+  value     = statuspal-next_automation.api.trigger_url
+  sensitive = true
 }
 ```
 
@@ -57,7 +58,7 @@ output "api_automation_trigger_url" {
 
 - `created_at` (String) Timestamp at which the automation was created.
 - `id` (String) TypeID-prefixed identifier (e.g. `auto_…`).
-- `trigger_url` (String) URL external monitors POST trigger payloads to.
+- `trigger_url` (String, Sensitive) URL external monitors POST trigger payloads to. Treated as a capability URL (it embeds a token that can drive incident/service state), so it is marked sensitive.
 - `updated_at` (String) Timestamp at which the automation was last updated.
 
 <a id="nestedatt--automation_format"></a>

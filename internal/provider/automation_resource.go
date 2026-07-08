@@ -111,9 +111,11 @@ func (r *automationResource) Schema(_ context.Context, _ resource.SchemaRequest,
 				},
 			},
 			"trigger_url": schema.StringAttribute{
-				MarkdownDescription: "URL external monitors POST trigger payloads to.",
-				Computed:            true,
-				PlanModifiers:       []planmodifier.String{stringplanmodifier.UseStateForUnknown()},
+				MarkdownDescription: "URL external monitors POST trigger payloads to. Treated as a capability " +
+					"URL (it embeds a token that can drive incident/service state), so it is marked sensitive.",
+				Computed:      true,
+				Sensitive:     true,
+				PlanModifiers: []planmodifier.String{stringplanmodifier.UseStateForUnknown()},
 			},
 			"created_at": schema.StringAttribute{
 				MarkdownDescription: "Timestamp at which the automation was created.",

@@ -90,7 +90,7 @@ func (d *automationsDataSource) Schema(_ context.Context, _ datasource.SchemaReq
 						"expected_result_path": schema.StringAttribute{Computed: true},
 						"expected_result":      schema.StringAttribute{Computed: true},
 						"secret_path":          schema.StringAttribute{Computed: true},
-						"trigger_url":          schema.StringAttribute{Computed: true},
+						"trigger_url":          schema.StringAttribute{Computed: true, Sensitive: true},
 						"created_at":           schema.StringAttribute{Computed: true},
 						"updated_at":           schema.StringAttribute{Computed: true},
 					},
