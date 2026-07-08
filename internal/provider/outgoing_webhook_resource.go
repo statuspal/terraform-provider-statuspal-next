@@ -31,9 +31,10 @@ var webhookEvents = []string{
 }
 
 var (
-	_ resource.Resource                = &outgoingWebhookResource{}
-	_ resource.ResourceWithConfigure   = &outgoingWebhookResource{}
-	_ resource.ResourceWithImportState = &outgoingWebhookResource{}
+	_ resource.Resource                   = &outgoingWebhookResource{}
+	_ resource.ResourceWithConfigure      = &outgoingWebhookResource{}
+	_ resource.ResourceWithImportState    = &outgoingWebhookResource{}
+	_ resource.ResourceWithValidateConfig = &outgoingWebhookResource{}
 )
 
 // NewOutgoingWebhookResource is a helper function to simplify the provider implementation.
@@ -143,6 +144,38 @@ func (r *outgoingWebhookResource) Schema(_ context.Context, _ resource.SchemaReq
 
 func (r *outgoingWebhookResource) Configure(_ context.Context, req resource.ConfigureRequest, resp *resource.ConfigureResponse) {
 	r.client = clientFromProviderData(req.ProviderData, &resp.Diagnostics)
+}
+
+func (r *outgoingWebhookResource) ValidateConfig(ctx context.Context, req resource.ValidateConfigRequest, resp *resource.ValidateConfigResponse) {
+	var config outgoingWebhookResourceModel
+	resp.Diagnostics.Append(req.Config.Get(ctx, &config)...)
+	if resp.Diagnostics.HasError() {
+		return
+	}
+
+	if config.AllStatusPages.IsUnknown() || config.StatusPageSubdomains.IsUnknown() {
+		return
+	}
+
+	allStatusPages := config.AllStatusPages.IsNull() || config.AllStatusPages.ValueBool()
+	hasSubdomains := !config.StatusPageSubdomains.IsNull() && len(config.StatusPageSubdomains.Elements()) > 0
+
+	switch {
+	case allStatusPages && hasSubdomains:
+		resp.Diagnostics.AddAttributeError(
+			path.Root("status_page_subdomains"),
+			"Invalid Attribute Combination",
+			"status_page_subdomains cannot be set when all_status_pages is true. "+
+				"Set all_status_pages to false to scope the webhook to specific pages, or remove status_page_subdomains.",
+		)
+	case !allStatusPages && !hasSubdomains:
+		resp.Diagnostics.AddAttributeError(
+			path.Root("status_page_subdomains"),
+			"Missing Attribute Configuration",
+			"status_page_subdomains is required when all_status_pages is false. "+
+				"List the status page subdomains this webhook should be scoped to.",
+		)
+	}
 }
 
 func (r *outgoingWebhookResource) Create(ctx context.Context, req resource.CreateRequest, resp *resource.CreateResponse) {

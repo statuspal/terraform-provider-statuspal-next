@@ -6,6 +6,7 @@ package provider
 import (
 	"net/http"
 	"net/http/httptest"
+	"regexp"
 	"sync"
 	"testing"
 
@@ -104,6 +105,53 @@ resource "statuspal-next_outgoing_webhook" "test" {
 					resource.TestCheckResourceAttr("statuspal-next_outgoing_webhook.test", "enabled", "false"),
 					resource.TestCheckResourceAttr("statuspal-next_outgoing_webhook.test", "events.#", "1"),
 				),
+			},
+		},
+	})
+}
+
+func TestAccOutgoingWebhookResource_subdomainsWithAllStatusPages(t *testing.T) {
+	server := httptest.NewServer(outgoingWebhookMux("wbk_01hxyz"))
+	defer server.Close()
+	cfg := providerConfig(server.URL)
+
+	resource.Test(t, resource.TestCase{
+		ProtoV6ProviderFactories: testAccProtoV6ProviderFactories,
+		Steps: []resource.TestStep{
+			{
+				Config: cfg + `
+resource "statuspal-next_outgoing_webhook" "test" {
+  name                   = "Ops alerts"
+  url                    = "https://hooks.example.com/statuspal"
+  events                 = ["notice.created"]
+  all_status_pages       = true
+  status_page_subdomains = ["tf-acc-sp"]
+}
+`,
+				ExpectError: regexp.MustCompile(`status_page_subdomains cannot be set when all_status_pages is true`),
+			},
+		},
+	})
+}
+
+func TestAccOutgoingWebhookResource_subdomainsRequiredWhenScoped(t *testing.T) {
+	server := httptest.NewServer(outgoingWebhookMux("wbk_01hxyz"))
+	defer server.Close()
+	cfg := providerConfig(server.URL)
+
+	resource.Test(t, resource.TestCase{
+		ProtoV6ProviderFactories: testAccProtoV6ProviderFactories,
+		Steps: []resource.TestStep{
+			{
+				Config: cfg + `
+resource "statuspal-next_outgoing_webhook" "test" {
+  name             = "Ops alerts"
+  url              = "https://hooks.example.com/statuspal"
+  events           = ["notice.created"]
+  all_status_pages = false
+}
+`,
+				ExpectError: regexp.MustCompile(`status_page_subdomains is required when all_status_pages is false`),
 			},
 		},
 	})
