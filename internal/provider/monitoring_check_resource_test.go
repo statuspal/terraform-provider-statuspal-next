@@ -6,6 +6,7 @@ package provider
 import (
 	"net/http"
 	"net/http/httptest"
+	"regexp"
 	"strings"
 	"sync"
 	"testing"
@@ -131,6 +132,29 @@ resource "statuspal-next_monitoring_check" "test" {
 					resource.TestCheckResourceAttr(name, "recipient_emails.#", "2"),
 					resource.TestCheckNoResourceAttr(name, "automation.service_slug"),
 				),
+			},
+		},
+	})
+}
+
+func TestAccMonitoringCheckResource_httpMethodOnTCP(t *testing.T) {
+	server := httptest.NewServer(monitoringCheckMux("mck_01hxyz"))
+	defer server.Close()
+	cfg := providerConfig(server.URL)
+
+	resource.Test(t, resource.TestCase{
+		ProtoV6ProviderFactories: testAccProtoV6ProviderFactories,
+		Steps: []resource.TestStep{
+			{
+				Config: cfg + `
+resource "statuspal-next_monitoring_check" "test" {
+  name             = "DB port"
+  url              = "tcp://db.acme.com:5432"
+  http_method      = "get"
+  recipient_emails = ["ops@acme.com"]
+}
+`,
+				ExpectError: regexp.MustCompile(`http_method cannot be set for a TCP check`),
 			},
 		},
 	})

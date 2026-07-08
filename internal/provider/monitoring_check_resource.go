@@ -29,9 +29,10 @@ var (
 )
 
 var (
-	_ resource.Resource                = &monitoringCheckResource{}
-	_ resource.ResourceWithConfigure   = &monitoringCheckResource{}
-	_ resource.ResourceWithImportState = &monitoringCheckResource{}
+	_ resource.Resource                   = &monitoringCheckResource{}
+	_ resource.ResourceWithConfigure      = &monitoringCheckResource{}
+	_ resource.ResourceWithImportState    = &monitoringCheckResource{}
+	_ resource.ResourceWithValidateConfig = &monitoringCheckResource{}
 )
 
 // NewMonitoringCheckResource is a helper function to simplify the provider implementation.
@@ -168,6 +169,28 @@ func (r *monitoringCheckResource) Schema(_ context.Context, _ resource.SchemaReq
 
 func (r *monitoringCheckResource) Configure(_ context.Context, req resource.ConfigureRequest, resp *resource.ConfigureResponse) {
 	r.client = clientFromProviderData(req.ProviderData, &resp.Diagnostics)
+}
+
+func (r *monitoringCheckResource) ValidateConfig(ctx context.Context, req resource.ValidateConfigRequest, resp *resource.ValidateConfigResponse) {
+	var config monitoringCheckResourceModel
+	resp.Diagnostics.Append(req.Config.Get(ctx, &config)...)
+	if resp.Diagnostics.HasError() {
+		return
+	}
+
+	if config.URL.IsUnknown() || config.HTTPMethod.IsUnknown() {
+		return
+	}
+
+	isTCP := strings.HasPrefix(strings.ToLower(config.URL.ValueString()), "tcp://")
+	if isTCP && !config.HTTPMethod.IsNull() {
+		resp.Diagnostics.AddAttributeError(
+			path.Root("http_method"),
+			"Invalid Attribute Combination",
+			"http_method cannot be set for a TCP check. It only applies to http:// and https:// URLs; "+
+				"remove http_method or change url to an http(s) scheme.",
+		)
+	}
 }
 
 func (r *monitoringCheckResource) Create(ctx context.Context, req resource.CreateRequest, resp *resource.CreateResponse) {
