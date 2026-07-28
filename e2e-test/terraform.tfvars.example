@@ -1,0 +1,8 @@
+# Copy to terraform.tfvars and fill in. terraform.tfvars is git-ignored.
+# You can also leave these unset and export the env vars instead:
+#   export STATUSPAL_NEXT_API_KEY=sk_...
+#   export STATUSPAL_NEXT_ENDPOINT=https://next.statuspal.io/api/v1
+
+statuspal_next_api_key  = "sk_..."
+statuspal_next_endpoint = "https://next.statuspal.io/api/v1"
+subdomain               = "tf-e2e-test"

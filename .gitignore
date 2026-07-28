@@ -1,0 +1,26 @@
+*.dll
+*.exe
+.DS_Store
+example.tf
+terraform.tfplan
+terraform.tfstate
+terraform.tfvars
+*.auto.tfvars
+bin/
+dist/
+modules-dev/
+/pkg/
+.vagrant/
+*.log
+*.bak
+*~
+.*.swp
+.idea
+*.iml
+*.test
+
+# Keep windows files with windows line endings
+*.winfile eol=crlf
+
+# Compiled provider binary (output of `go build .`)
+/terraform-provider-statuspal-next
