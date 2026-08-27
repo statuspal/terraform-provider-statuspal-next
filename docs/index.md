@@ -27,8 +27,8 @@ provider "statuspal-next" {
 
   # Optional. Defaults to https://next.statuspal.io/api/v1. May also be supplied
   # via the STATUSPAL_NEXT_ENDPOINT environment variable. Point this at a local
-  # instance for development, e.g. "http://spage.test:7070/api/v1".
-  # endpoint = "http://spage.test:7070/api/v1"
+  # instance for development, e.g. "http://localhost:7070/api/v1".
+  # endpoint = "http://localhost:7070/api/v1"
 }
 
 variable "statuspal_next_api_key" {
@@ -43,4 +43,4 @@ variable "statuspal_next_api_key" {
 ### Optional
 
 - `api_key` (String, Sensitive) Organization API key (a `sk_…` token sent as a Bearer credential). May also be provided via the `STATUSPAL_NEXT_API_KEY` environment variable.
-- `endpoint` (String) Base URL of the Management API. Defaults to `https://next.statuspal.io/api/v1`. May also be provided via the `STATUSPAL_NEXT_ENDPOINT` environment variable. Useful for pointing at a self-hosted or local development instance (e.g. `http://spage.test:7070/api/v1`).
+- `endpoint` (String) Base URL of the Management API. Defaults to `https://next.statuspal.io/api/v1`. May also be provided via the `STATUSPAL_NEXT_ENDPOINT` environment variable. Useful for pointing at a self-hosted or local development instance (e.g. `http://localhost:7070/api/v1`).

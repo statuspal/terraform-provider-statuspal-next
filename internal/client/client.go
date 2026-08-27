@@ -1,7 +1,7 @@
 // Copyright (c) HashiCorp, Inc.
 // SPDX-License-Identifier: MPL-2.0
 
-// Package statuspalnext is a thin HTTP client for the StatusPal Next (spage)
+// Package statuspalnext is a thin HTTP client for the StatusPal Next
 // Management API (https://next.statuspal.io/api/v1). It is intentionally small:
 // it handles bearer authentication, the `{ "data": ... }` response envelope,
 // rate limiting, and decoding of API errors, and exposes typed CRUD helpers for

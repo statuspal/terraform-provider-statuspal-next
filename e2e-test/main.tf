@@ -66,7 +66,7 @@ resource "statuspal-next_container" "us" {
 }
 
 # Services depend on the containers so they are created after the full set of
-# containers exists. spage builds the container×service grid at create time from
+# containers exists. The API builds the container×service grid at create time from
 # whatever already exists, so creating services and containers concurrently can
 # leave grid cells missing (see the container-grid race). Serializing avoids it.
 resource "statuspal-next_service" "api" {

@@ -49,22 +49,7 @@ export STATUSPAL_NEXT_ENDPOINT=https://next.statuspal.io/api/v1   # or a local i
 ```
 
 Create an org API key from the StatusPal Next UI if you don't have one (the `sk_…` token
-is shown once). See the root README for the Rails-console alternative.
-
-### Monitoring checks need Sentinel (local gotcha)
-
-Creating/updating/deleting a `monitoring_check` makes the backend call the external
-Sentinel monitoring service. spage reads `SENTINEL_HOST`/`SENTINEL_API_KEY` from its env
-(dev `.env` defaults to `http://localhost:4080`). If nothing is listening there, the API
-returns `502 monitoring_service_error` and the apply fails. Pick one:
-
-- **Have Sentinel running** at the configured host, **or**
-- **Stub it** — point `SENTINEL_HOST` at any server that returns `2xx` for
-  `POST /subscription`, `PUT /api/v1/subscriptions/:id`, and `DELETE /subscription/:id`, **or**
-- **Disable it** — unset `SENTINEL_HOST`/`SENTINEL_API_KEY` on the spage server so the
-  integration becomes a no-op (the check is still created, just not registered for monitoring).
-
-This only affects `monitoring_check` resources; the rest of the harness needs no Sentinel.
+is shown once).
 
 ## 4. Run the lifecycle
 

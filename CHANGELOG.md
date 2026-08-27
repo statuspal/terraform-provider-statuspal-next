@@ -2,7 +2,7 @@
 
 ## 0.1.0 (Unreleased)
 
-Initial release of the StatusPal Next (spage) Terraform provider.
+Initial release of the StatusPal Next Terraform provider.
 
 FEATURES:
 

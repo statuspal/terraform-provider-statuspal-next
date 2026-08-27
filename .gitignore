@@ -24,3 +24,7 @@ modules-dev/
 
 # Compiled provider binary (output of `go build .`)
 /terraform-provider-statuspal-next
+
+# Local-only notes and agent guidance (kept off the public repo)
+CLAUDE.md
+e2e-test/LOCAL-NOTES.md
