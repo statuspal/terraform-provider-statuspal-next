@@ -1,7 +1,7 @@
 # Terraform Provider for StatusPal Next
 
-A [Terraform](https://www.terraform.io) provider for [StatusPal Next](https://www.statuspal.io)
-(codename *spage*), built on the
+A [Terraform](https://www.terraform.io) provider for [StatusPal Next](https://www.statuspal.io),
+built on the
 [Terraform Plugin Framework](https://developer.hashicorp.com/terraform/plugin/framework).
 It manages status pages and their building blocks as code through the StatusPal Next
 [Management API](https://next.statuspal.io/api/v1).
@@ -65,13 +65,6 @@ resource "statuspal-next_service" "api" {
 Create an organization API key from the StatusPal Next UI. The raw token (`sk_…`) is
 shown once on creation — copy it then.
 
-Alternatively, from the Rails console:
-
-```ruby
-key = ApiKey.create!(organization: Organization.find_by(name: "Your Org"), name: "terraform")
-puts key.raw_token # shown once
-```
-
 ## Development
 
 Requires Go (see `go.mod`) and Terraform.
@@ -83,9 +76,9 @@ go generate ./...               # regenerate docs/ via tfplugindocs
 golangci-lint run               # lint
 ```
 
-### Running against a local spage instance
+### Running against a local instance
 
-1. Start spage (`bin/dev`, served at `http://spage.test:7070`).
+1. Start a local StatusPal Next instance (default: `http://localhost:7070`).
 2. Issue and activate an API key (see above).
 3. Build the provider and add a `dev_overrides` block to `~/.terraformrc`:
 
@@ -98,7 +91,7 @@ golangci-lint run               # lint
    }
    ```
 
-4. Configure the provider with `endpoint = "http://spage.test:7070/api/v1"` and your key,
+4. Configure the provider with `endpoint = "http://localhost:7070/api/v1"` and your key,
    then `terraform plan` / `apply`.
 
 ### Acceptance tests

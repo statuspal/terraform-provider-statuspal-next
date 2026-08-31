@@ -3,7 +3,7 @@
 
 package statuspalnext
 
-// The structs below mirror the schemas in spage's docs/openapi.yaml. Optional
+// The structs below mirror the schemas in the Management API. Optional
 // request fields use pointers so the caller controls exactly what is sent in a
 // PATCH body (a nil pointer is omitted; a non-nil pointer is always sent, even
 // for the zero value such as `false`). Read-only response fields are plain

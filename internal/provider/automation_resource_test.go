@@ -13,7 +13,7 @@ import (
 )
 
 // automationMux mocks the nested automations API for a single status page. It
-// echoes the custom format back and derives a trigger_url, like spage does.
+// echoes the custom format back and derives a trigger_url, like the API does.
 func automationMux(subdomain, id string) http.Handler {
 	var mu sync.Mutex
 	current := map[string]any{
@@ -26,7 +26,7 @@ func automationMux(subdomain, id string) http.Handler {
 	render := func() map[string]any {
 		out := cloneMap(current)
 		out["id"] = id
-		out["trigger_url"] = "http://spage.test/incident_automations/tok_" + id + "/trigger"
+		out["trigger_url"] = "http://example.test/incident_automations/tok_" + id + "/trigger"
 		out["has_secret"] = current["secret"] != nil && current["secret"] != ""
 		delete(out, "secret")
 		delete(out, "automation_format_name")

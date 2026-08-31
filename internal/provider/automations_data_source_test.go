@@ -28,7 +28,7 @@ func TestAccAutomationsDataSource(t *testing.T) {
 					"secret_path":          "$.token",
 					"custom":               true,
 				},
-				"trigger_url": "http://spage.test/incident_automations/tok_1/trigger",
+				"trigger_url": "http://example.test/incident_automations/tok_1/trigger",
 				"created_at":  "2026-01-01T00:00:00Z",
 				"updated_at":  "2026-01-01T00:00:00Z",
 			},

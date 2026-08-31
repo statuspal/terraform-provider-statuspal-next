@@ -16,7 +16,7 @@ import (
 
 // monitoringCheckMux is a stateful mock of the monitoring checks API. It derives
 // check_type from the url scheme and applies the server-side defaults the
-// provider relies on, mirroring spage's controller.
+// provider relies on, mirroring the real endpoint.
 func monitoringCheckMux(id string) http.Handler {
 	var mu sync.Mutex
 	current := map[string]any{

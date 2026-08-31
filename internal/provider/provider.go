@@ -69,7 +69,7 @@ func (p *statuspalNextProvider) Schema(_ context.Context, _ provider.SchemaReque
 			"endpoint": schema.StringAttribute{
 				MarkdownDescription: "Base URL of the Management API. Defaults to `" + statuspalnext.DefaultEndpoint +
 					"`. May also be provided via the `" + envEndpoint + "` environment variable. Useful for " +
-					"pointing at a self-hosted or local development instance (e.g. `http://spage.test:7070/api/v1`).",
+					"pointing at a self-hosted or local development instance (e.g. `http://localhost:7070/api/v1`).",
 				Optional: true,
 			},
 		},
